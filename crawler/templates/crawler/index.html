@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>댓글 증강 시스템</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: 'Segoe UI', sans-serif; background: #f0f4f8; display: flex; justify-content: center; align-items: center; min-height: 100vh; }
+    .card { background: white; border-radius: 16px; padding: 48px 40px; box-shadow: 0 4px 24px rgba(0,0,0,0.1); width: 100%; max-width: 480px; text-align: center; }
+    h1 { font-size: 1.8rem; color: #1a1a2e; margin-bottom: 8px; }
+    p.subtitle { color: #666; font-size: 0.9rem; margin-bottom: 32px; }
+    .input-row { display: flex; gap: 8px; }
+    input[type="text"] { flex: 1; padding: 12px 16px; border: 2px solid #e2e8f0; border-radius: 10px; font-size: 1rem; outline: none; transition: border-color 0.2s; }
+    input[type="text"]:focus { border-color: #4f46e5; }
+    button { padding: 12px 20px; background: #4f46e5; color: white; border: none; border-radius: 10px; font-size: 1rem; cursor: pointer; transition: background 0.2s; white-space: nowrap; }
+    button:hover { background: #4338ca; }
+    .hint { margin-top: 10px; font-size: 0.8rem; color: #999; }
+    .error { margin-top: 16px; padding: 12px; background: #fee2e2; color: #dc2626; border-radius: 8px; font-size: 0.9rem; }
+    .loading { display: none; margin-top: 16px; color: #4f46e5; font-size: 0.9rem; }
+  </style>
+</head>
+<body>
+  <div class="card">
+    <h1>댓글 증강 시스템</h1>
+    <p class="subtitle">토스증권 커뮤니티 댓글을 수집·정제·증강합니다</p>
+
+    <form method="POST" action="/crawl/" onsubmit="showLoading()">
+      {% csrf_token %}
+      <div class="input-row">
+        <input type="text" name="company" placeholder="예: 삼성전자" required>
+        <button type="submit">검색</button>
+      </div>
+      <p class="hint">회사명 일부만 입력해도 됩니다 (가장 상단의 검색 결과를 자동 선택)</p>
+    </form>
+
+    <p class="loading" id="loading">댓글 수집 중... 잠시 기다려주세요.</p>
+
+    {% if error %}
+      <div class="error">{{ error }}</div>
+    {% endif %}
+  </div>
+
+  <script>
+    function showLoading() {
+      document.getElementById('loading').style.display = 'block';
+    }
+  </script>
+</body>
+</html>
